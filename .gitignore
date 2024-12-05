@@ -3,3 +3,4 @@
 *.ilk
 *.lib
 *.pdb
+.vscode/

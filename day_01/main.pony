@@ -26,18 +26,21 @@ actor Main
         error
       end
 
-    let a = Array[I32]
-    let b = Array[I32]
-    for line in lines do
-      let tokens = line.split_by("   ")
-      if tokens.size() != 2 then continue end
-      try
-        a.push(tokens(0)?.i32()?)
-        b.push(tokens(1)?.i32()?)
-      end
-    end
-
-    (a, b)
+    Iter[String iso^](lines)
+      .filter_map[(I32, I32)](
+        {(line) =>
+          try
+            let tokens = line.split_by("   ")
+            (tokens(0)?.i32()?, tokens(1)?.i32()?)
+          end
+        })
+      .fold[(Array[I32], Array[I32])](
+        ([], []),
+        {(acc, next) =>
+          (let a, let b) = acc
+          (let i, let j) = next
+          (a .> push(i), b .> push(j))
+        })
 
   fun step_1(a: Array[I32], b: Array[I32]) =>
     let sort = Sort[Array[I32], I32]
